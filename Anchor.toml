@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-time_locked = "FyFNB5HtCiAbrfT5PVJTU4QfxQLBczrH3rE5SepQqBPb"
+time_locked = "G2Eu2D46kTMw4tbQ9HeoLvh3DeA6d4k1XUA6JfLbsY6Z"
 
 [registry]
 url = "http://localhost:8899"
