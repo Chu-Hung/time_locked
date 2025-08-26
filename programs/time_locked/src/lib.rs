@@ -6,7 +6,10 @@ use anchor_lang::solana_program::program::invoke;
 use anchor_lang::solana_program::system_instruction::transfer;
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token_interface::{self, Mint, TokenAccount, TokenInterface, TransferChecked},
+    token::{close_account, CloseAccount},
+    token_interface::{
+        self, transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked,
+    },
 };
 
 declare_id!("G2Eu2D46kTMw4tbQ9HeoLvh3DeA6d4k1XUA6JfLbsY6Z");
@@ -122,8 +125,19 @@ pub mod time_locked {
         };
 
         let cpi_program = ctx.accounts.token_program.to_account_info();
-        let cpi_context = CpiContext::new(cpi_program, cpi_accounts).with_signer(signer_seeds);
-        token_interface::transfer_checked(cpi_context, vault.amount, decimals)?;
+        let cpi_context =
+            CpiContext::new(cpi_program.clone(), cpi_accounts).with_signer(signer_seeds);
+        transfer_checked(cpi_context, vault.amount, decimals)?;
+
+        let cpi_close_accounts = CloseAccount {
+            account: ctx.accounts.vault_token_account.to_account_info(),
+            destination: ctx.accounts.payer.to_account_info(),
+            authority: ctx.accounts.vault.to_account_info(),
+        };
+
+        let cpi_ctx =
+            CpiContext::new(cpi_program.clone(), cpi_close_accounts).with_signer(signer_seeds);
+        close_account(cpi_ctx)?;
 
         msg!("Withdrawal successful! Vault closed");
         Ok(())

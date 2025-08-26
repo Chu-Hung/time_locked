@@ -249,10 +249,16 @@ describe('Time Locked Program', () => {
     );
 
     const after_balance = await connection.getTokenAccountBalance(payer_ata);
-    const vault_balance = await connection.getTokenAccountBalance(vault_ata);
+    try {
+      await connection.getTokenAccountBalance(vault_ata);
+      expect.fail('Account should be closed');
+    } catch (err: any) {
+      const message = err?.error?.errorMessage || err?.message || '';
+      expect(message).to.include('could not find account');
+    }
+
     expect(Number(after_balance.value.amount)).to.be.gte(
       Number(before_balance.value.amount),
     );
-    expect(Number(Number(vault_balance.value.amount))).to.equal(0);
   });
 });
