@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import Galaxy from './components/ui/bg-galaxy';
+import MyVaults from './my-vaults';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
+  const wallet = useAnchorWallet();
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <main className='w-full h-screen bg-black text-white relative'>
+      <div className='absolute inset-0 top-0 left-0 z-0'>
+        <Galaxy
+          mouseRepulsion={true}
+          mouseInteraction={true}
+          density={1.5}
+          glowIntensity={0.6}
+          saturation={0.8}
+          hueShift={700}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div className='absolute inset-0 top-0 left-0 z-10 pointer-events-none'>
+        <div className='w-full h-full flex items-center justify-center'>
+          <div className='text-center space-y-4 w-1/3'>
+            <h1 className='text-4xl font-bold text-white'>
+              Solana Time Locked
+            </h1>
+            {wallet ? (
+              <MyVaults />
+            ) : (
+              <WalletMultiButton className='pointer-events-auto' />
+            )}
+          </div>
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </main>
+  );
+};
 
-export default App
+export default App;

@@ -12,7 +12,7 @@ use anchor_spl::{
     },
 };
 
-declare_id!("G2Eu2D46kTMw4tbQ9HeoLvh3DeA6d4k1XUA6JfLbsY6Z");
+declare_id!("5F3APs596H15YQeVXRfTYQwAGv2ynQCXJvDC9fc7LXUR");
 
 #[program]
 pub mod time_locked {
@@ -62,8 +62,9 @@ pub mod time_locked {
         vault.unlock_time = unlock_time;
         vault.created_at = Clock::get()?.unix_timestamp;
         vault.bump = ctx.bumps.vault;
-
         let decimals = ctx.accounts.mint.decimals;
+        vault.decimals = Some(decimals.clone());
+
         let cpi_accounts = TransferChecked {
             mint: ctx.accounts.mint.to_account_info(),
             from: ctx.accounts.payer_token_account.to_account_info(),
@@ -73,7 +74,7 @@ pub mod time_locked {
 
         let cpi_program = ctx.accounts.token_program.to_account_info();
         let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
-        token_interface::transfer_checked(cpi_context, amount, decimals)?;
+        token_interface::transfer_checked(cpi_context, amount, decimals.clone())?;
 
         msg!("Vault created successfully!");
         Ok(())
@@ -144,7 +145,7 @@ pub mod time_locked {
     }
 }
 
-pub const VAULT_SIZE: usize = 8 + 4 + 32 + 32 + 1 + 32 + 8 + 8 + 8;
+pub const VAULT_SIZE: usize = 8 + 4 + 32 + 32 + 1 + 32 + 8 + 8 + 8 + 8;
 
 #[derive(Accounts)]
 #[instruction(id: String)]
@@ -224,6 +225,7 @@ pub struct Vault {
     pub id: String,
     pub owner: Pubkey,
     pub mint: Option<Pubkey>,
+    pub decimals: Option<u8>,
     pub amount: u64,
     pub unlock_time: i64,
     pub created_at: i64,
