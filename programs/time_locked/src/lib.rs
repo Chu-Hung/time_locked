@@ -33,6 +33,7 @@ pub mod time_locked {
         vault.created_at = Clock::get()?.unix_timestamp;
         vault.bump = ctx.bumps.vault;
 
+        // Transfer SOL to vault
         let transfer_instruction =
             transfer(&ctx.accounts.payer.key(), &ctx.accounts.vault.key(), amount);
 
@@ -65,6 +66,8 @@ pub mod time_locked {
         let decimals = ctx.accounts.mint.decimals;
         vault.decimals = Some(decimals.clone());
 
+        // Transfer SPL token to ata vault
+        // PDA vault is owner of ata vault
         let cpi_accounts = TransferChecked {
             mint: ctx.accounts.mint.to_account_info(),
             from: ctx.accounts.payer_token_account.to_account_info(),
@@ -130,6 +133,7 @@ pub mod time_locked {
             CpiContext::new(cpi_program.clone(), cpi_accounts).with_signer(signer_seeds);
         transfer_checked(cpi_context, vault.amount, decimals)?;
 
+        // Close ata vault token, return rent to payer
         let cpi_close_accounts = CloseAccount {
             account: ctx.accounts.vault_token_account.to_account_info(),
             destination: ctx.accounts.payer.to_account_info(),
@@ -207,6 +211,7 @@ pub struct Withdraw<'info> {
 pub struct SplWithdraw<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
+    // Close and refund all rent, value to payer
     #[account(mut, close = payer)]
     pub vault: Account<'info, Vault>,
     #[account(mut)]

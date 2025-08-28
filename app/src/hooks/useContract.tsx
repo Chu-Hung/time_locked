@@ -70,6 +70,7 @@ export const useContract = () => {
     return ids.length > 0 ? Math.max(...ids) + 1 : 0;
   };
 
+  // New lock vault with sol
   const newNativeLock = useCallback(
     async (amount: number, unlockTime: number) => {
       if (!program || !wallet) return;
@@ -111,6 +112,7 @@ export const useContract = () => {
     [wallet],
   );
 
+  // Withdraw sol from vault
   const nativeWithdraw = useCallback(
     async (id: string) => {
       if (!program || !wallet) return;
