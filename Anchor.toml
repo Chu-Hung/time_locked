@@ -5,11 +5,8 @@ package_manager = "yarn"
 resolution = true
 skip-lint = false
 
-[programs.devnet]
-time_locked = "5F3APs596H15YQeVXRfTYQwAGv2ynQCXJvDC9fc7LXUR"
-
 [programs.localnet]
-time_locked = "5F3APs596H15YQeVXRfTYQwAGv2ynQCXJvDC9fc7LXUR"
+time_locked = "FCYfFgA5L7sM4HsrDXNjBenMm1aDWBUt45RuK8y6MFGa"
 
 [registry]
 url = "http://localhost:8899"

@@ -24,7 +24,7 @@
 - **Rust**: version 1.80.0 or higher
 - **Solana CLI**: version 2.2.00 or higher
 - **Anchor Framework**: version 0.31.1
-- Recommend using [**Bun**](https://bun.sh/), or any package manager
+- Recommend using [**Bun**](https://bun.sh/), or any node package manager
 
 ### Supported Operating Systems
 
@@ -87,7 +87,7 @@ anchor deploy --provider.cluster localnet
 bun/yarn run dev
 ```
 
-The application will run at: `http://localhost:5173`
+The application will run at: [`http://localhost:5173`](http://localhost:5173)
 
 ## Program Account State Design
 
@@ -155,13 +155,20 @@ pub enum ErrorCode {
 bun/yarn run validator
 ```
 
-### 2. Run all tests
+### 2. Sync Keys
+
+```bash
+# Resync key with build target
+anchor keys sync
+```
+
+### 3. Run all tests
 
 ```bash
 anchor test --skip-local-validator
 ```
 
-### 3. Test cases included
+### 4. Test cases included
 
 #### SOL Vault Tests
 

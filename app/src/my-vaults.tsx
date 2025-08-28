@@ -1,4 +1,9 @@
-import { DeleteOutlined, LockOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  LockOutlined,
+  LogoutOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { type ProgramAccount } from '@coral-xyz/anchor';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import {
@@ -17,8 +22,10 @@ import { useState } from 'react';
 import Countdown from './components/ui/countdown';
 import { DEFAULT_TOKEN } from './constants';
 import { useContract } from './hooks/useContract';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const MyVaults = () => {
+  const { disconnect } = useWallet();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     vaults,
@@ -29,6 +36,7 @@ const MyVaults = () => {
     contextHolder,
     withdraw,
     mutate,
+    wallet,
   } = useContract();
   const tokenValue = Form.useWatch('token', form);
 
@@ -37,6 +45,13 @@ const MyVaults = () => {
   return (
     <main className='pointer-events-auto w-full mt-4'>
       {contextHolder}
+      <div className='flex items-center justify-between w-full mb-4'>
+        <p className='mr-2'>
+          Wallet: {wallet?.publicKey?.toBase58().slice(0, 4)}...
+          {wallet?.publicKey?.toBase58().slice(-4)}
+        </p>
+        <Button danger onClick={disconnect} icon={<LogoutOutlined />} />
+      </div>
       <div className='flex w-full items-center justify-between'>
         <p>Total vaults: {vaults?.length}</p>
         <Button
@@ -152,7 +167,10 @@ const VaultCard = ({
                   .slice(0, 4)} ...${vault.account.mint.toBase58().slice(-4)}`
               : 'SOL'}
           </p>
-          <Countdown targetDate={targetDate} onComplete={mutate} />
+          <p>Unlock: {dayjs(targetDate).format('DD/MM/YYYY HH:mm')}</p>
+          <p>
+            Remaining: <Countdown targetDate={targetDate} onComplete={mutate} />
+          </p>
         </div>
         {isUnlocked ? (
           <Button

@@ -5,6 +5,7 @@ import MyVaults from './my-vaults';
 
 const App = () => {
   const wallet = useAnchorWallet();
+
   return (
     <main className='w-full h-screen bg-black text-white relative'>
       <div className='absolute inset-0 top-0 left-0 z-0'>
