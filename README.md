@@ -215,7 +215,7 @@ time_locked/
 ### 2. Create vault
 
 1. Click the "+" button to create a new vault
-2. Select token type (SOL or SPL token)
+2. Select token type (SOL or SPL token) (for example you can faucet USDC devnet [here](https://spl-token-faucet.com/?token-name=USDC))
 3. Enter token amount
 4. Choose unlock time
 5. Confirm transaction
